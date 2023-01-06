@@ -57,15 +57,14 @@ class ToDoViewController: UIViewController {
     
     //MARK: This function to fetch the items from Persistent Container
     
-    func fetchItems(){
-        let request : NSFetchRequest<Item>
-        request = Item.fetchRequest()
-        
+    func fetchItems(with request : NSFetchRequest<Item> = Item.fetchRequest()){
         do{
             itemList = try context.fetch(request)
         }catch{
             print("Error occur while fetching item list : \(error)")
         }
+        
+        tableView.reloadData()
     }
     
 }
@@ -100,6 +99,31 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
 
 extension ToDoViewController : HeaderViewDelegate {
     
+    //MARK: This function calls when we click on cross button on search bar then show original item list
+    
+    func toShowOriginalItemList(_ view: HeaderView) {
+        fetchItems()
+    }
+    
+    
+    //MARK: This function to query for related title in COREDATA and show in tableView
+    
+    func queryOfItemInList(_ view: HeaderView, with title: String) {
+        print(title)
+       
+            let request : NSFetchRequest<Item> = Item.fetchRequest()
+            
+            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
+            
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+            
+            self.fetchItems(with: request)
+       
+        
+        
+    }
+    
+    
     //MARK: This Funtion When we click on Add button near heading of table View
     
     func addItemOnListAndReLoadList(_ view: HeaderView) {
@@ -121,4 +145,6 @@ extension ToDoViewController : HeaderViewDelegate {
         alert.addAction(action)
         present(alert, animated: true)
     }
+    
+    
 }

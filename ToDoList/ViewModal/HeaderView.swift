@@ -11,6 +11,10 @@ import UIKit
 protocol HeaderViewDelegate {
     
     func addItemOnListAndReLoadList(_ view : HeaderView)
+    
+    func queryOfItemInList(_ view : HeaderView , with title : String)
+    
+    func toShowOriginalItemList(_ view : HeaderView)
 }
 
 class HeaderView : UIView {
@@ -39,6 +43,7 @@ class HeaderView : UIView {
        let searchBar = UISearchBar()
         searchBar.placeholder = "Search..."
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.becomeFirstResponder()
         return searchBar
     }()
     
@@ -49,12 +54,15 @@ class HeaderView : UIView {
         addSubview(label)
         addSubview(addItem)
         addSubview(searchBar)
+        searchBar.delegate = self
         applyConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
+    
+    //MARK: This function handling constraints for all components in HeaderView
     
     func applyConstraints(){
         let addItemConstraints = [
@@ -81,5 +89,22 @@ class HeaderView : UIView {
     
     @objc func addItemOnList(){
         delegate?.addItemOnListAndReLoadList(self)
+    }
+}
+
+//MARK: - Extension to handle all the methods related with UISearchBar
+
+extension HeaderView : UISearchBarDelegate{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let title = searchBar.text else {return}
+        delegate?.queryOfItemInList(self, with: title)
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.count == 0 {
+            DispatchQueue.main.async { [self] in
+                searchBar.resignFirstResponder()
+                delegate?.toShowOriginalItemList(self)
+            }
+        }
     }
 }
