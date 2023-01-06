@@ -10,8 +10,10 @@ import CoreData
 
 class ToDoViewController: UIViewController {
     
+    // Custom list of array
     var itemList = [Item]()
     
+    // Generic Context
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private var tableView : UITableView = {
@@ -25,7 +27,7 @@ class ToDoViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 100))
+        let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 130))
         
         headerView.delegate = self
        
@@ -33,13 +35,15 @@ class ToDoViewController: UIViewController {
         
         view.addSubview(tableView)
         
-       // fetchItems()
+        fetchItems()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
+    
+    //MARK: This function to save the items on Persistent Container
     
     func saveItems(){
         do{
@@ -50,6 +54,8 @@ class ToDoViewController: UIViewController {
         
         tableView.reloadData()
     }
+    
+    //MARK: This function to fetch the items from Persistent Container
     
     func fetchItems(){
         let request : NSFetchRequest<Item>
@@ -63,6 +69,9 @@ class ToDoViewController: UIViewController {
     }
     
 }
+
+//MARK: - Extension to handle all the methods of TableView like height of cell , row selected
+
 extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         itemList.count
@@ -86,7 +95,13 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
     }
     
 }
+
+//MARK: - Extension for Methods Under HeaderViewDelegate Protocol
+
 extension ToDoViewController : HeaderViewDelegate {
+    
+    //MARK: This Funtion When we click on Add button near heading of table View
+    
     func addItemOnListAndReLoadList(_ view: HeaderView) {
         var textField = UITextField()
         let alert = UIAlertController(title: "Add Item To List", message: "", preferredStyle: .alert)
