@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoViewController: UIViewController {
     
-    var itemList = ["Shopping" , "Study" ,"Visit Doctor" , "Pay Bills"]
+    var itemList = [Item]()
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     private var tableView : UITableView = {
         let tableView = UITableView()
@@ -25,10 +28,12 @@ class ToDoViewController: UIViewController {
         let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 100))
         
         headerView.delegate = self
-        
+       
         tableView.tableHeaderView = headerView
         
         view.addSubview(tableView)
+        
+       // fetchItems()
     }
     
     override func viewDidLayoutSubviews() {
@@ -36,7 +41,26 @@ class ToDoViewController: UIViewController {
         tableView.frame = view.bounds
     }
     
+    func saveItems(){
+        do{
+            try context.save()
+        }catch{
+            print("Error occur while Saving the item : \(error)")
+        }
+        
+        tableView.reloadData()
+    }
     
+    func fetchItems(){
+        let request : NSFetchRequest<Item>
+        request = Item.fetchRequest()
+        
+        do{
+            itemList = try context.fetch(request)
+        }catch{
+            print("Error occur while fetching item list : \(error)")
+        }
+    }
     
 }
 extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
@@ -46,7 +70,7 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = itemList[indexPath.row]
+        cell.textLabel?.text = itemList[indexPath.row].title
         return cell
     }
     
@@ -55,6 +79,9 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        saveItems()
         print(itemList[indexPath.row])
     }
     
@@ -66,8 +93,11 @@ extension ToDoViewController : HeaderViewDelegate {
         
         let action = UIAlertAction(title: "Add Item", style: .default){ [self] alerts in
             guard let getItem = textField.text  else {return}
-            itemList.append(getItem)
-            tableView.reloadData()
+            let newItem = Item(context: context)
+            newItem.title = getItem
+            newItem.done = false
+            itemList.append(newItem)
+            saveItems()
         }
         alert.addTextField(){ alertTextField in
             textField = alertTextField
