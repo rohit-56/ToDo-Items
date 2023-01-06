@@ -35,32 +35,48 @@ class HeaderView : UIView {
         return button
     }()
     
+    private var searchBar : UISearchBar = {
+       let searchBar = UISearchBar()
+        searchBar.placeholder = "Search..."
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        return searchBar
+    }()
+    
     var delegate : HeaderViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(label)
         addSubview(addItem)
-        
+        addSubview(searchBar)
         applyConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError()
     }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        label.frame = bounds
-    }
     
     func applyConstraints(){
         let addItemConstraints = [
             addItem.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            addItem.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            addItem.heightAnchor.constraint(equalToConstant: 50),
-            addItem.widthAnchor.constraint(equalToConstant: 50)
+            addItem.topAnchor.constraint(equalTo: topAnchor, constant: 25),
+            addItem.heightAnchor.constraint(equalToConstant: 40),
+            addItem.widthAnchor.constraint(equalToConstant: 40)
+        ]
+        
+        let searchBarConstraints = [
+            searchBar.topAnchor.constraint(equalTo: topAnchor, constant: 80),
+            searchBar.widthAnchor.constraint(equalToConstant: bounds.width)
+        ]
+        
+        let labelConstraints = [
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            label.widthAnchor.constraint(equalToConstant: bounds.width),
+            label.heightAnchor.constraint(equalToConstant: 80)
         ]
         NSLayoutConstraint.activate(addItemConstraints)
+        NSLayoutConstraint.activate(searchBarConstraints)
+        NSLayoutConstraint.activate(labelConstraints)
     }
     
     @objc func addItemOnList(){
