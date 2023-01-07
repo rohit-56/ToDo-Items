@@ -13,6 +13,12 @@ class ToDoViewController: UIViewController {
     // Custom list of array
     var itemList = [Item]()
     
+    var selectedCategory : Category?{
+        didSet{
+            fetchItems()
+        }
+    }
+    
     // Generic Context
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -35,7 +41,7 @@ class ToDoViewController: UIViewController {
         
         view.addSubview(tableView)
         
-        fetchItems()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -57,7 +63,17 @@ class ToDoViewController: UIViewController {
     
     //MARK: This function to fetch the items from Persistent Container
     
-    func fetchItems(with request : NSFetchRequest<Item> = Item.fetchRequest()){
+    func fetchItems(with request : NSFetchRequest<Item> = Item.fetchRequest(),with predicate : NSPredicate? = nil){
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory MATCHES %@", "")
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [additionalPredicate,categoryPredicate])
+        }
+        else{
+            request.predicate = categoryPredicate
+        }
+        
         do{
             itemList = try context.fetch(request)
         }catch{
@@ -113,11 +129,11 @@ extension ToDoViewController : HeaderViewDelegate {
        
             let request : NSFetchRequest<Item> = Item.fetchRequest()
             
-            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
+            let predicate = NSPredicate(format: "title CONTAINS[cd] %@", title)
             
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
             
-            self.fetchItems(with: request)
+            self.fetchItems(with: request , with: predicate)
        
         
         
@@ -135,6 +151,7 @@ extension ToDoViewController : HeaderViewDelegate {
             let newItem = Item(context: context)
             newItem.title = getItem
             newItem.done = false
+            newItem.parentCategory = selectedCategory
             itemList.append(newItem)
             saveItems()
         }
