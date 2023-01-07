@@ -21,8 +21,8 @@ class ViewController: UIViewController {
     }
     
     @objc func switchToDoVC(){
-        let storyboard = UIStoryboard(name: "ToDo", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "ToDoViewController") as UIViewController
+        let storyboard = UIStoryboard(name: "Category", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "CategoryViewController") as UIViewController
         vc.modalPresentationStyle = .fullScreen
         vc.modalTransitionStyle = .coverVertical
         self.present(vc, animated: true)
