@@ -81,11 +81,11 @@ extension CategoryViewController : UITableViewDelegate , UITableViewDataSource {
         return 60
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DispatchQueue.main.async {
-            let vc = ToDoViewController()
-              self.navigationController?.pushViewController(vc, animated: true)
-        }
-     
+        tableView.deselectRow(at: indexPath, animated: true)
+        let vc = ToDoViewController()
+        vc.selectedCategory = categoryList[indexPath.row]
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 }
 

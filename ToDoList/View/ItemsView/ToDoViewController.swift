@@ -65,7 +65,7 @@ class ToDoViewController: UIViewController {
     
     func fetchItems(with request : NSFetchRequest<Item> = Item.fetchRequest(),with predicate : NSPredicate? = nil){
         
-        let categoryPredicate = NSPredicate(format: "parentCategory MATCHES %@", "")
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
         
         if let additionalPredicate = predicate {
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [additionalPredicate,categoryPredicate])
@@ -114,6 +114,14 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
 //MARK: - Extension for Methods Under HeaderViewDelegate Protocol
 
 extension ToDoViewController : HeaderViewDelegate {
+    
+    func dismissToDoVC(_ view: HeaderView) {
+        DispatchQueue.main.async { [self] in
+            dismiss(animated: true)
+        }
+        
+    }
+    
     
     //MARK: This function calls when we click on cross button on search bar then show original item list
     
