@@ -12,6 +12,8 @@ protocol HeaderViewDelegate {
     
     func addItemOnListAndReLoadList(_ view : HeaderView)
     
+    func dismissToDoVC(_ view : HeaderView)
+    
     func queryOfItemInList(_ view : HeaderView , with title : String)
     
     func toShowOriginalItemList(_ view : HeaderView)
@@ -39,6 +41,16 @@ class HeaderView : UIView {
         return button
     }()
     
+    private var back : UIButton = {
+        let button = UIButton()
+         button.setTitle("Back", for: .normal)
+         button.translatesAutoresizingMaskIntoConstraints = false
+         button.backgroundColor = .systemGray3
+         button.titleLabel?.font = .systemFont(ofSize: 40, weight: .medium)
+         button.addTarget(self, action: #selector(backToCategoryVC), for: .touchUpInside)
+         return button
+    }()
+    
     private var searchBar : UISearchBar = {
        let searchBar = UISearchBar()
         searchBar.placeholder = "Search..."
@@ -54,6 +66,7 @@ class HeaderView : UIView {
         addSubview(label)
         addSubview(addItem)
         addSubview(searchBar)
+        addSubview(back)
         searchBar.delegate = self
         applyConstraints()
     }
@@ -82,13 +95,23 @@ class HeaderView : UIView {
             label.widthAnchor.constraint(equalToConstant: bounds.width),
             label.heightAnchor.constraint(equalToConstant: 80)
         ]
+        
+        let backButtonConstraints = [
+            back.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            back.leftAnchor.constraint(equalTo: leftAnchor, constant: 5)
+        ]
         NSLayoutConstraint.activate(addItemConstraints)
         NSLayoutConstraint.activate(searchBarConstraints)
         NSLayoutConstraint.activate(labelConstraints)
+        NSLayoutConstraint.activate(backButtonConstraints)
     }
     
     @objc func addItemOnList(){
         delegate?.addItemOnListAndReLoadList(self)
+    }
+    
+    @objc func backToCategoryVC(){
+        delegate?.dismissToDoVC(self)
     }
 }
 
