@@ -7,16 +7,17 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
 
 class CategoryViewController: UIViewController {
     
-    var categoryList = [Category]()
+    var categoryList : [Category]?
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     private var categoryTable : UITableView = {
        let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(SwipeTableViewCell.self, forCellReuseIdentifier: "cell")
         return tableView
     }()
     
@@ -46,6 +47,18 @@ class CategoryViewController: UIViewController {
         categoryTable.frame = view.bounds
     }
     
+    
+    //MARK: Below functions are for data manipulation in Persistent Container
+    
+    func removeCategory(){
+        do{
+            try context.save()
+            fetchCategoriesList()
+        }catch{
+            print("Error while saving the category \(error)")
+        }
+    }
+    
     func saveCategory(){
         do{
             try context.save()
@@ -68,12 +81,13 @@ class CategoryViewController: UIViewController {
 }
 extension CategoryViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryList.count
+        return categoryList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = categoryList[indexPath.row].name
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? SwipeTableViewCell else {return UITableViewCell()}
+        cell.textLabel?.text = categoryList![indexPath.row].name
+        cell.delegate = self
         return cell
     }
     
@@ -83,7 +97,7 @@ extension CategoryViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let vc = ToDoViewController()
-        vc.selectedCategory = categoryList[indexPath.row]
+        vc.selectedCategory = categoryList?[indexPath.row]
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
@@ -99,7 +113,7 @@ extension CategoryViewController : CategoryHeaderViewDelegate {
         let action = UIAlertAction(title: "Add Category", style: .default){ [self] result in
             let newCategory = Category(context: context)
             newCategory.name = textField.text!
-            categoryList.append(newCategory)
+            categoryList?.append(newCategory)
             saveCategory()
         }
         
@@ -110,4 +124,37 @@ extension CategoryViewController : CategoryHeaderViewDelegate {
         alert.addAction(action)
         present(alert, animated: true)
     }
+}
+extension CategoryViewController : SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") {[self] action, indexPath in
+            
+            
+                if let categoryDeleted = categoryList?[indexPath.row] {
+                    
+                    context.delete(categoryDeleted)
+                    categoryList?.remove(at: indexPath.row)
+                    do{
+                        try context.save()
+                    }catch{
+                        print("Error occurs inside delete category \(error)")
+                    }
+                    
+                }
+        }
+
+        // customize the action appearance
+        deleteAction.image = UIImage(systemName: "trash")
+
+        return [deleteAction]
+    }
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        return options
+    }
+   
 }
