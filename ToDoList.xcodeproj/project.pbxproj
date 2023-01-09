@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8C0BC3CB29670E8D00378B6F /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8C0BC3C929670E8D00378B6F /* DataModel.xcdatamodeld */; };
+		8C5F2F7E296C466B00E583BA /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8C5F2F7D296C466B00E583BA /* SwipeCellKit */; };
+		8C5F2F82296C7FB400E583BA /* SwipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5F2F81296C7FB400E583BA /* SwipeViewController.swift */; };
 		8CA2A31729681FE100DEC735 /* Category.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CA2A31629681FE100DEC735 /* Category.storyboard */; };
 		8CA2A31929681FF300DEC735 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA2A31829681FF300DEC735 /* CategoryViewController.swift */; };
 		8CA2A31B296821F100DEC735 /* CategoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA2A31A296821F100DEC735 /* CategoryHeaderView.swift */; };
@@ -24,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		8C0BC3CA29670E8D00378B6F /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		8C5F2F81296C7FB400E583BA /* SwipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeViewController.swift; sourceTree = "<group>"; };
 		8CA2A31629681FE100DEC735 /* Category.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Category.storyboard; sourceTree = "<group>"; };
 		8CA2A31829681FF300DEC735 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		8CA2A31A296821F100DEC735 /* CategoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryHeaderView.swift; sourceTree = "<group>"; };
@@ -45,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C5F2F7E296C466B00E583BA /* SwipeCellKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +119,7 @@
 			children = (
 				8CD7ED4529656C4F00C1F82B /* HeaderView.swift */,
 				8CA2A31A296821F100DEC735 /* CategoryHeaderView.swift */,
+				8C5F2F81296C7FB400E583BA /* SwipeViewController.swift */,
 			);
 			path = ViewModal;
 			sourceTree = "<group>";
@@ -144,6 +149,9 @@
 			dependencies = (
 			);
 			name = ToDoList;
+			packageProductDependencies = (
+				8C5F2F7D296C466B00E583BA /* SwipeCellKit */,
+			);
 			productName = ToDoList;
 			productReference = 8CD7ED2729655F1E00C1F82B /* ToDoList.app */;
 			productType = "com.apple.product-type.application";
@@ -172,6 +180,9 @@
 				Base,
 			);
 			mainGroup = 8CD7ED1E29655F1E00C1F82B;
+			packageReferences = (
+				8C5F2F7C296C466B00E583BA /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
+			);
 			productRefGroup = 8CD7ED2829655F1E00C1F82B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -203,6 +214,7 @@
 			files = (
 				8CD7ED4629656C4F00C1F82B /* HeaderView.swift in Sources */,
 				8CD7ED422965691E00C1F82B /* ToDoViewController.swift in Sources */,
+				8C5F2F82296C7FB400E583BA /* SwipeViewController.swift in Sources */,
 				8CA2A31929681FF300DEC735 /* CategoryViewController.swift in Sources */,
 				8CD7ED2F29655F1E00C1F82B /* ViewController.swift in Sources */,
 				8C0BC3CB29670E8D00378B6F /* DataModel.xcdatamodeld in Sources */,
@@ -424,6 +436,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8C5F2F7C296C466B00E583BA /* XCRemoteSwiftPackageReference "SwipeCellKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwipeCellKit/SwipeCellKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8C5F2F7D296C466B00E583BA /* SwipeCellKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C5F2F7C296C466B00E583BA /* XCRemoteSwiftPackageReference "SwipeCellKit" */;
+			productName = SwipeCellKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		8C0BC3C929670E8D00378B6F /* DataModel.xcdatamodeld */ = {
