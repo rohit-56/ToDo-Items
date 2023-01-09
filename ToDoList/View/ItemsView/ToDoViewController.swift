@@ -7,11 +7,12 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
 
-class ToDoViewController: UIViewController {
+class ToDoViewController: SwipeViewController {
     
     // Custom list of array
-    var itemList = [Item]()
+    var itemList : [Item]?
     
     var selectedCategory : Category?{
         didSet{
@@ -24,7 +25,7 @@ class ToDoViewController: UIViewController {
     
     private var tableView : UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(SwipeTableViewCell.self, forCellReuseIdentifier: "cell")
         return tableView
     }()
     
@@ -50,6 +51,22 @@ class ToDoViewController: UIViewController {
     }
     
     //MARK: This function to save the items on Persistent Container
+    
+    
+    override func deleteRow(with indexPath: IndexPath) {
+        if let itemDeleted = itemList?[indexPath.row] {
+            
+            context.delete(itemDeleted)
+            itemList?.remove(at: indexPath.row)
+            do{
+                try context.save()
+            }catch{
+                print("Error occurs inside delete category \(error)")
+            }
+            
+        }
+    }
+    
     
     func saveItems(){
         do{
@@ -89,12 +106,13 @@ class ToDoViewController: UIViewController {
 
 extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        itemList.count
+        itemList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = itemList[indexPath.row].title
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? SwipeTableViewCell else {return UITableViewCell()}
+        cell.textLabel?.text = itemList?[indexPath.row].title
+        cell.delegate = self
         return cell
     }
     
@@ -106,7 +124,7 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
         
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         saveItems()
-        print(itemList[indexPath.row])
+        print(itemList?[indexPath.row])
     }
     
 }
@@ -160,7 +178,7 @@ extension ToDoViewController : HeaderViewDelegate {
             newItem.title = getItem
             newItem.done = false
             newItem.parentCategory = selectedCategory
-            itemList.append(newItem)
+            itemList?.append(newItem)
             saveItems()
         }
         alert.addTextField(){ alertTextField in
