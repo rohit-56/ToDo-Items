@@ -8,6 +8,8 @@
 import UIKit
 import CoreData
 import SwipeCellKit
+import ChameleonFramework
+
 
 class CategoryViewController: SwipeViewController {
     
@@ -92,6 +94,7 @@ extension CategoryViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? SwipeTableViewCell else {return UITableViewCell()}
         cell.textLabel?.text = categoryList![indexPath.row].name
+        cell.backgroundColor =   UIColor(hexString: (categoryList?[indexPath.row].categoryColor)!)
         cell.delegate = self
         return cell
     }
@@ -118,6 +121,7 @@ extension CategoryViewController : CategoryHeaderViewDelegate {
         let action = UIAlertAction(title: "Add Category", style: .default){ [self] result in
             let newCategory = Category(context: context)
             newCategory.name = textField.text!
+            newCategory.categoryColor = RandomFlatColor().hexValue()
             categoryList?.append(newCategory)
             saveCategory()
         }
