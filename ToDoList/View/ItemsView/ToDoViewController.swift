@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 import SwipeCellKit
+import ChameleonFramework
 
 class ToDoViewController: SwipeViewController {
     
@@ -37,6 +38,24 @@ class ToDoViewController: SwipeViewController {
         let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 130))
         
         headerView.delegate = self
+        
+        headerView.label.text = selectedCategory?.name
+        
+        headerView.searchBar.barTintColor = HexColor((selectedCategory?.categoryColor)!)
+        
+        headerView.back.backgroundColor = HexColor((selectedCategory?.categoryColor)!)
+        
+        headerView.label.backgroundColor = HexColor((selectedCategory?.categoryColor)!)
+        
+        headerView.addItem.backgroundColor = HexColor((selectedCategory?.categoryColor)!)
+        
+        let color = ContrastColorOf(HexColor((selectedCategory?.categoryColor)!)!, returnFlat: true)
+        
+        headerView.back.setTitleColor(color, for: .normal)
+        
+        headerView.label.textColor = color
+        
+        headerView.addItem.setTitleColor(color, for: .normal)
        
         tableView.tableHeaderView = headerView
         
@@ -114,7 +133,9 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
         cell.textLabel?.text = itemList?[indexPath.row].title
         
         if let color = selectedCategory?.categoryColor{
-            cell.backgroundColor = UIColor(hexString: color)?.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(itemList!.count)))
+            let backgroundcolor = UIColor(hexString: color)?.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(itemList!.count)))
+            cell.backgroundColor = backgroundcolor
+            cell.textLabel?.textColor = ContrastColorOf(backgroundcolor!, returnFlat: true)
         }
         print((CGFloat(indexPath.row) / CGFloat(itemList!.count)))
         cell.delegate = self

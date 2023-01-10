@@ -21,7 +21,7 @@ protocol HeaderViewDelegate {
 
 class HeaderView : UIView {
     
-    private var label : UILabel = {
+    public var label : UILabel = {
        let label = UILabel()
         label.text = "ToDo Items"
         label.font = .systemFont(ofSize: 40, weight: .bold)
@@ -31,7 +31,7 @@ class HeaderView : UIView {
         return label
     }()
     
-    private var addItem : UIButton = {
+    public var addItem : UIButton = {
        let button = UIButton()
         button.setTitle("+", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -41,17 +41,17 @@ class HeaderView : UIView {
         return button
     }()
     
-    private var back : UIButton = {
+    public var back : UIButton = {
         let button = UIButton()
          button.setTitle("Back", for: .normal)
          button.translatesAutoresizingMaskIntoConstraints = false
          button.backgroundColor = .systemGray3
-         button.titleLabel?.font = .systemFont(ofSize: 40, weight: .medium)
+         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .medium)
          button.addTarget(self, action: #selector(backToCategoryVC), for: .touchUpInside)
          return button
     }()
     
-    private var searchBar : UISearchBar = {
+    public var searchBar : UISearchBar = {
        let searchBar = UISearchBar()
         searchBar.placeholder = "Search..."
         searchBar.translatesAutoresizingMaskIntoConstraints = false

@@ -94,7 +94,9 @@ extension CategoryViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? SwipeTableViewCell else {return UITableViewCell()}
         cell.textLabel?.text = categoryList![indexPath.row].name
-        cell.backgroundColor =   UIColor(hexString: (categoryList?[indexPath.row].categoryColor)!)
+        let backgroundcolor = UIColor(hexString: (categoryList?[indexPath.row].categoryColor)!)
+        cell.backgroundColor = backgroundcolor
+        cell.textLabel?.textColor = ContrastColorOf(backgroundcolor!, returnFlat: true)
         cell.delegate = self
         return cell
     }
