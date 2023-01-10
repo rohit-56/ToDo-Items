@@ -112,6 +112,11 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? SwipeTableViewCell else {return UITableViewCell()}
         cell.textLabel?.text = itemList?[indexPath.row].title
+        
+        if let color = selectedCategory?.categoryColor{
+            cell.backgroundColor = UIColor(hexString: color)?.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(itemList!.count)))
+        }
+        print((CGFloat(indexPath.row) / CGFloat(itemList!.count)))
         cell.delegate = self
         return cell
     }
@@ -124,7 +129,6 @@ extension ToDoViewController : UITableViewDelegate , UITableViewDataSource {
         
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         saveItems()
-        print(itemList?[indexPath.row])
     }
     
 }
